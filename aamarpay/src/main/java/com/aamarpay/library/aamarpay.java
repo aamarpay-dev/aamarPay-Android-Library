@@ -2,6 +2,7 @@ package com.aamarpay.library;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -13,7 +14,7 @@ public class aamarpay extends AppCompatActivity {
         setContentView(R.layout.activity_aamarpay);
     }
 
-    public void init() {
-        Toast.makeText(aamarpay.this, "Hello World", Toast.LENGTH_LONG).show();
+    public static void init(Context context) {
+        Toast.makeText(context, "Hello World", Toast.LENGTH_LONG).show();
     }
 }

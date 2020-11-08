@@ -1,0 +1,3 @@
+include ':aamarpay'
+include ':app'
+rootProject.name = "aamarPay"

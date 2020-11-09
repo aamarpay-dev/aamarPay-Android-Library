@@ -7,6 +7,12 @@ import android.widget.Toast;
 
 import com.aamarpay.library.Retrofit.LiveClient;
 import com.aamarpay.library.Retrofit.SandboxClient;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Random;
 
@@ -17,8 +23,43 @@ import retrofit2.Response;
 public class AamarPay {
     public static final String DATA = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     public static Random RANDOM = new Random();
+    private Context context;
 
-    public static void init_pgw(Context context, String type) {
+    public interface onInitListener {
+        public void onSuccess(JsonObject jsonObject);
+
+        public void onFailure(JsonObject jsonObject);
+    }
+
+    private onInitListener listener;
+
+    public AamarPay(Context ctx) {
+        context = ctx;
+        // set null or default listener or accept as argument to constructor
+        this.listener = null;
+    }
+
+    public void initPGW(onInitListener listener){
+        this.listener = listener;
+        onSuccessListener();
+    }
+
+    public void onSuccessListener(){
+        JsonObject gsonObject = new JsonObject();
+        try {
+            JSONObject jsonObj_ = new JSONObject();
+            jsonObj_.put("error", false);
+            jsonObj_.put("payment_url", "google.com");
+
+            JsonParser jsonParser = new JsonParser();
+            gsonObject = (JsonObject) jsonParser.parse(jsonObj_.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        listener.onSuccess(gsonObject);
+    }
+
+    public void init_pgw(Context context, String type, String store_id, String signature_key) {
         if (type.toLowerCase().equals("live")) {
             Call<ResponseBody> call = LiveClient
                     .getInstance()
@@ -28,7 +69,7 @@ public class AamarPay {
             call.enqueue(new retrofit2.Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    Log.d("TEST_SDK", response.toString());
+
                 }
 
                 @Override

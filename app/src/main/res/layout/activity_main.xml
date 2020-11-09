@@ -7,6 +7,13 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <im.delight.android.webview.AdvancedWebView
+        android:visibility="gone"
+        android:elevation="10dp"
+        android:id="@+id/advancedWebview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
@@ -133,7 +140,7 @@
                     android:background="@drawable/edit_text_background"
                     android:hint="@string/customer_mobile_number"
                     android:inputType="phone"
-                    android:text="01704005054"
+                    android:text="01870762470"
                     tools:ignore="Autofill" />
 
                 <TextView

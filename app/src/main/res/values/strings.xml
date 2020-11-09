@@ -13,4 +13,5 @@
     <string name="customer_country">Customer Country</string>
     <string name="payment_description">Payment Description</string>
     <string name="pay_bdt_10">Pay BDT 10</string>
+    <string name="try_again">Try Again</string>
 </resources>

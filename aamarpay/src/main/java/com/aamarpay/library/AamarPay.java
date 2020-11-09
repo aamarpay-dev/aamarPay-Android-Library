@@ -23,7 +23,7 @@ public class AamarPay {
             Call<ResponseBody> call = LiveClient
                     .getInstance()
                     .getApi()
-                    .init_payment("adsad");
+                    .init_payment("adsad", "json");
 
             call.enqueue(new retrofit2.Callback<ResponseBody>() {
                 @Override
@@ -40,7 +40,7 @@ public class AamarPay {
             Call<ResponseBody> call = SandboxClient
                     .getInstance()
                     .getApi()
-                    .init_payment("adad");
+                    .init_payment("adad", "json");
 
             call.enqueue(new retrofit2.Callback<ResponseBody>() {
                 @Override

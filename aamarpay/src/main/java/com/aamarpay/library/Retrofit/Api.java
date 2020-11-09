@@ -10,7 +10,8 @@ public interface Api {
     @FormUrlEncoded
     @POST("jsonpost.php")
     Call<ResponseBody> init_payment(
-            @Field("store_id") String store_id
+            @Field("store_id") String store_id,
+            @Field("type") String data_type
 //            @Field("device_token") String device_token,
 //            @Field("user_name") String user_name,
 //            @Field("user_email") String user_email,

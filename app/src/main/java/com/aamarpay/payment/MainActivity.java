@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Swipe refresh layout actions
         swipeRefresh();
+
+        AamarPay.init_pgw(MainActivity.this, "SANDBOX");
     }
 
     // Swipe refresh layout actions

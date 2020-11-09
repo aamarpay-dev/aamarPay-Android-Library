@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".PgwHome">
 
-    <WebView
-        android:id="@+id/pgw_web"
+    <im.delight.android.webview.AdvancedWebView
+        android:id="@+id/pgwHome"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 </RelativeLayout>

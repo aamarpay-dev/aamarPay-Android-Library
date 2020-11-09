@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.aamarpay.library.Retrofit.LiveClient;
 import com.aamarpay.library.Retrofit.SandboxClient;
 import com.google.gson.JsonArray;
@@ -14,6 +16,7 @@ import com.google.gson.JsonParser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.Random;
 
 import okhttp3.ResponseBody;
@@ -24,27 +27,174 @@ public class AamarPay {
     public static final String DATA = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     public static Random RANDOM = new Random();
     private Context context;
+    private String store_id, signature_key, trxID, trxAmount, trxCurrency, customerName, customerEmail, customerPhone, customerAddress, customerCity, customerCountry, paymentDescription;
+    private boolean isPaymentInfoSet, isCustomerInfoSet, autoGenerateTrx, isTestMode;
 
     public interface onInitListener {
-        public void onSuccess(JsonObject jsonObject);
+        public void onInitFailure(Boolean error, String message);
 
-        public void onFailure(JsonObject jsonObject);
+        public void onPaymentSuccess(JsonObject jsonObject);
+
+        public void onPaymentFailure(JsonObject jsonObject);
+
+        public void onPaymentCancel(Boolean error, String message);
     }
 
     private onInitListener listener;
 
-    public AamarPay(Context ctx) {
-        context = ctx;
+    public AamarPay(Context context, String store_id, String signature_key) {
+        // Set the context
+        this.context = context;
+
+        // Setting store id and signature key
+        this.store_id = store_id;
+        this.signature_key = signature_key;
+
         // set null or default listener or accept as argument to constructor
         this.listener = null;
+
+        // Set default false
+        this.isCustomerInfoSet = false;
+        this.isPaymentInfoSet = false;
+        this.autoGenerateTrx = false;
+        this.isTestMode = true;
+
+        // Init variables
+        this.trxAmount = "";
+        this.trxCurrency = "";
+        this.paymentDescription = "";
+        this.customerName = "";
+        this.customerEmail = "";
+        this.customerAddress = "";
+        this.customerPhone = "";
+        this.customerCity = "";
+        this.customerCountry = "";
     }
 
-    public void initPGW(onInitListener listener){
+    // Set if the library generate the transaction id itself
+    public void autoGenerateTransactionID(Boolean generate) {
+        this.autoGenerateTrx = generate;
+    }
+
+    // Set custom trx ID
+    public void setTransactionID(String transaction_id) {
+        this.trxID = transaction_id;
+    }
+
+    // Set the trx parameter
+    public void setTransactionParameter(String transaction_amount, String transaction_currency, String payment_description) {
+        this.trxAmount = transaction_amount;
+        this.trxCurrency = transaction_currency;
+        this.paymentDescription = payment_description;
+        this.isPaymentInfoSet = true;
+    }
+
+    // Set customer details
+    public void setCustomerDetails(String customer_name, String customer_email, String customer_phone, String customer_address, String customer_city, String customer_country) {
+        this.customerName = customer_name;
+        this.customerEmail = customer_email;
+        this.customerAddress = customer_address;
+        this.customerPhone = customer_phone;
+        this.customerCity = customer_city;
+        this.customerCountry = customer_country;
+        this.isCustomerInfoSet = true;
+    }
+
+    // Sandbox/Live Switch
+    public void testMode(Boolean mode) {
+        this.isTestMode = mode;
+    }
+
+    public void initPGW(onInitListener listener) {
         this.listener = listener;
-        onSuccessListener();
+        if (isPaymentInfoSet && isCustomerInfoSet) {
+            if (autoGenerateTrx) {
+                trxID = generate_trx_id();
+                initGateway();
+            } else {
+                if (trxID.equals("")) {
+                    listener.onInitFailure(true, "You need to provide a transaction id. You can auto generate transaction id by setting autoGenerateTrx as true.");
+                } else {
+                    initGateway();
+                }
+            }
+        } else {
+            listener.onInitFailure(true, "Payment info or customer details are missing.");
+        }
     }
 
-    public void onSuccessListener(){
+    private void initGateway() {
+        if (isTestMode) {
+            Call<ResponseBody> call = SandboxClient
+                    .getInstance()
+                    .getApi()
+                    .init_payment(createJSONMap());
+
+            call.enqueue(new retrofit2.Callback<ResponseBody>() {
+                @Override
+                public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                    String resp = null;
+                    try {
+                        if (response.body() != null) {
+                            resp = response.body().string();
+                            try {
+                                final JSONObject jsonObject = new JSONObject(resp);
+                                String payment_url = jsonObject.getString("payment_url");
+                                Intent intent = new Intent(context, PgwHome.class);
+                                intent.putExtra("URL", payment_url);
+                                context.startActivity(intent);
+                            } catch (JSONException e) {
+                                listener.onInitFailure(true, e.getMessage());
+                                e.printStackTrace();
+                            }
+                        }
+                    } catch (IOException e) {
+                        listener.onInitFailure(true, e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                    Log.d("TEST_SDK", t.getMessage());
+                }
+            });
+        } else {
+            // Live
+        }
+    }
+
+    private JsonObject createJSONMap() {
+        JsonObject gsonObject = new JsonObject();
+        try {
+            JSONObject jsonObj_ = new JSONObject();
+            jsonObj_.put("store_id", this.store_id);
+            jsonObj_.put("signature_key", this.signature_key);
+            jsonObj_.put("cus_name", this.customerName);
+            jsonObj_.put("cus_email", this.customerEmail);
+            jsonObj_.put("cus_phone", this.customerPhone);
+            jsonObj_.put("cus_add1", this.customerAddress);
+            jsonObj_.put("cus_city", this.customerCity);
+            jsonObj_.put("cus_country", this.customerCountry);
+            jsonObj_.put("amount", this.trxAmount);
+            jsonObj_.put("tran_id", this.trxID);
+            jsonObj_.put("currency", this.trxCurrency);
+            jsonObj_.put("success_url", "payment-success");
+            jsonObj_.put("fail_url", "payment-fail");
+            jsonObj_.put("cancel_url", "payment-cancel");
+            jsonObj_.put("desc", this.paymentDescription);
+            jsonObj_.put("type", "json");
+
+            JsonParser jsonParser = new JsonParser();
+            gsonObject = (JsonObject) jsonParser.parse(jsonObj_.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return gsonObject;
+    }
+
+    private void onSuccessListener() {
         JsonObject gsonObject = new JsonObject();
         try {
             JSONObject jsonObj_ = new JSONObject();
@@ -56,53 +206,18 @@ public class AamarPay {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        listener.onSuccess(gsonObject);
+//        listener.onPaymentCancel();
     }
 
-    public void init_pgw(Context context, String type, String store_id, String signature_key) {
-        if (type.toLowerCase().equals("live")) {
-            Call<ResponseBody> call = LiveClient
-                    .getInstance()
-                    .getApi()
-                    .init_payment("adsad", "json");
+    private void onFailureListener() {
 
-            call.enqueue(new retrofit2.Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Log.d("TEST_SDK", t.getMessage());
-                }
-            });
-        } else if (type.toLowerCase().equals("sandbox")) {
-            Call<ResponseBody> call = SandboxClient
-                    .getInstance()
-                    .getApi()
-                    .init_payment("adad", "json");
-
-            call.enqueue(new retrofit2.Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    Log.d("TEST_SDK", response.toString());
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Log.d("TEST_SDK", t.getMessage());
-                }
-            });
-        } else {
-            Toast.makeText(context, "Other", Toast.LENGTH_SHORT).show();
-        }
-//        Intent intent = new Intent(context, PgwHome.class);
-//        intent.putExtra("URL", "https://google.com");
-//        context.startActivity(intent);
     }
 
-    public static String generate_trx_id() {
+    private void onCancelListener() {
+        listener.onPaymentCancel(false, "Payment cancelled by user.");
+    }
+
+    public String generate_trx_id() {
         return randomString() + System.currentTimeMillis();
     }
 

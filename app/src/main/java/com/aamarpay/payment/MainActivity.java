@@ -34,6 +34,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
 
 import im.delight.android.webview.AdvancedWebView;
@@ -85,50 +86,63 @@ public class MainActivity extends AppCompatActivity implements AdvancedWebView.L
         customerCountry = customer_country.getText().toString();
         paymentDescription = payment_description.getText().toString();
 
-        showLoading();
+//        showLoading();
 
         // Swipe refresh layout actions
         swipeRefresh();
 
+//        AamarPay aamarPay = new AamarPay(MainActivity.this);
+//        aamarPay.initPGW(new AamarPay.onInitListener() {
+//            @Override
+//            public void onSuccess(JsonObject jsonObject) {
+//                Log.d("TEST_D", jsonObject.toString());
+//            }
+//
+//            @Override
+//            public void onFailure(JsonObject jsonObject) {
+//
+//            }
+//        });
+
 //        AamarPay.init_pgw(MainActivity.this, "SANDBOX");
-        Call<ResponseBody> call = SandboxClient
-                .getInstance()
-                .getApi()
-                .init_payment(ApiJsonMap(trxID, trxAmount, trxCurrency, customerName, customerEmail, customerPhone, customerAddress, customerCity, customerCountry, paymentDescription));
-
-        call.enqueue(new retrofit2.Callback<ResponseBody>() {
-            @Override
-            public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
-                String resp = null;
-                try {
-                    if (response.body() != null) {
-                        resp = response.body().string();
-                        try {
-                            final JSONObject jsonObject = new JSONObject(resp);
-                            String payment_url = jsonObject.getString("payment_url");
-                            Log.d("TEST_SDK", jsonObject.getString("payment_url"));
-                            alertDialog.dismiss();
-                            mWebView = (AdvancedWebView) findViewById(R.id.advancedWebview);
-                            mWebView.setVisibility(View.VISIBLE);
-                            mWebView.setListener(MainActivity.this, MainActivity.this);
-                            mWebView.setMixedContentAllowed(false);
-                            mWebView.loadUrl(payment_url);
-                        } catch (JSONException e) {
-                            errorPopUp("Error: " + e.getMessage());
-                            e.printStackTrace();
-                        }
-                    }
-                } catch (IOException e) {
-                    errorPopUp("Error: " + e.getMessage());
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
-                errorPopUp("Error: " + t.getMessage());
-            }
-        });
+//        Call<ResponseBody> call = SandboxClient
+//                .getInstance()
+//                .getApi()
+//                .init_payment(ApiJsonMap(trxID, trxAmount, trxCurrency, customerName, customerEmail, customerPhone, customerAddress, customerCity, customerCountry, paymentDescription));
+//
+//        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+//            @Override
+//            public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
+//                String resp = null;
+//                try {
+//                    if (response.body() != null) {
+//                        resp = response.body().string();
+//                        try {
+//                            final JSONObject jsonObject = new JSONObject(resp);
+//                            String payment_url = jsonObject.getString("payment_url");
+//                            Log.d("TEST_SDK", jsonObject.getString("payment_url"));
+//                            alertDialog.dismiss();
+//                            mWebView = (AdvancedWebView) findViewById(R.id.advancedWebview);
+//                            mWebView.setVisibility(View.VISIBLE);
+//                            mWebView.setListener(MainActivity.this, MainActivity.this);
+//                            mWebView.setMixedContentAllowed(false);
+//                            mWebView.loadUrl(payment_url);
+//                        } catch (JSONException e) {
+//                            errorPopUp("Error: " + e.getMessage());
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                } catch (IOException e) {
+//                    errorPopUp("Error: " + e.getMessage());
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
+//                errorPopUp("Error: " + t.getMessage());
+//            }
+//        });
     }
 
     private JsonObject ApiJsonMap(String trxID, String trxAmount, String trxCurrency, String customerName, String customerEmail, String customerPhone, String customerAddress, String customerCity, String customerCountry, String paymentDescription) {
@@ -256,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements AdvancedWebView.L
 
     @Override
     public void onPageStarted(String url, Bitmap favicon) {
-        if(url.contains("library-success")){
+        if (url.contains("library-success")) {
             Log.d("TEST__", url);
             mWebView.setVisibility(View.GONE);
         }

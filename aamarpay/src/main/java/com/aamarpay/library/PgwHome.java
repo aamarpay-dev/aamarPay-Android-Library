@@ -3,6 +3,7 @@ package com.aamarpay.library;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -43,14 +44,11 @@ public class PgwHome extends AppCompatActivity implements AdvancedWebView.Listen
         } else if (url.contains("payment-fail")) {
 
         } else if (url.contains("payment-cancel")) {
-            try {
-                Method m = AamarPay.class.getDeclaredMethod("onCancelListener");
-                m.setAccessible(true);
-                m.invoke(aamarPay);
-            } catch (Exception e) {
-                // Do Nothing
-            }
+            Intent intent = new Intent();
+            intent.putExtra("MESSAGE", "gfhhfghfgfhgfh");
+            setResult(1000, intent);
             finish();
+
         }
     }
 
@@ -72,5 +70,10 @@ public class PgwHome extends AppCompatActivity implements AdvancedWebView.Listen
     @Override
     public void onExternalPageRequest(String url) {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Disabled
     }
 }

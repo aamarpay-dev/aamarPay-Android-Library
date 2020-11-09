@@ -1,5 +1,6 @@
 package com.aamarpay.library;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -142,7 +143,7 @@ public class AamarPay {
                                 String payment_url = jsonObject.getString("payment_url");
                                 Intent intent = new Intent(context, PgwHome.class);
                                 intent.putExtra("URL", payment_url);
-                                context.startActivity(intent);
+                                ((Activity) context).startActivityForResult(intent, 1000);
                             } catch (JSONException e) {
                                 listener.onInitFailure(true, e.getMessage());
                                 e.printStackTrace();
@@ -229,5 +230,9 @@ public class AamarPay {
         }
 
         return sb.toString();
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("TEST_", "hjhgjh");
     }
 }

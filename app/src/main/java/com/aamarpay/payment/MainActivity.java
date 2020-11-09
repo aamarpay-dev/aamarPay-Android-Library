@@ -45,6 +45,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity implements AdvancedWebView.Listener {
 
     private AdvancedWebView mWebView;
+    private AamarPay aamarPay;
 
     private AlertDialog alertDialog;
     private String trxID, trxAmount, trxCurrency, customerName, customerEmail, customerPhone, customerAddress, customerCity, customerCountry, paymentDescription;
@@ -68,9 +69,12 @@ public class MainActivity extends AppCompatActivity implements AdvancedWebView.L
         payment_description = findViewById(R.id.payment_description);
 
         // Initiate payment
+        aamarPay = new AamarPay(MainActivity.this, "aamarpay", "28c78bb1f45112f5d40b956fe104645a");
+        aamarPay.testMode(true);
+        aamarPay.autoGenerateTransactionID(true);
 
         // Generate unique transaction id
-        trxID = AamarPay.generate_trx_id();
+        trxID = aamarPay.generate_trx_id();
 
         // Setting the values to fields
         trx_id.setText(trxID);
@@ -85,6 +89,31 @@ public class MainActivity extends AppCompatActivity implements AdvancedWebView.L
         customerCity = customer_city.getText().toString();
         customerCountry = customer_country.getText().toString();
         paymentDescription = payment_description.getText().toString();
+
+        aamarPay.setTransactionParameter(trxAmount, trxCurrency, paymentDescription);
+        aamarPay.setCustomerDetails(customerName, customerEmail, customerPhone, customerAddress, customerCity, customerCountry);
+
+        aamarPay.initPGW(new AamarPay.onInitListener() {
+            @Override
+            public void onInitFailure(Boolean error, String message) {
+                Log.d("TEST_", message);
+            }
+
+            @Override
+            public void onPaymentSuccess(JsonObject jsonObject) {
+
+            }
+
+            @Override
+            public void onPaymentFailure(JsonObject jsonObject) {
+
+            }
+
+            @Override
+            public void onPaymentCancel(Boolean error, String message) {
+                Log.d("TEST_", message);
+            }
+        });
 
 //        showLoading();
 
@@ -184,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements AdvancedWebView.L
             @Override
             public void onRefresh() {
                 // Regenerate unique transaction id
-                trxID = AamarPay.generate_trx_id();
+                trxID = aamarPay.generate_trx_id();
 
                 // Setting the values to fields
                 trx_id.setText(trxID);

@@ -44,11 +44,8 @@ public class PgwHome extends AppCompatActivity implements AdvancedWebView.Listen
         } else if (url.contains("payment-fail")) {
 
         } else if (url.contains("payment-cancel")) {
-            Intent intent = new Intent();
-            intent.putExtra("MESSAGE", "gfhhfghfgfhgfh");
-            setResult(1000, intent);
+            AamarPay.onCancelListener();
             finish();
-
         }
     }
 

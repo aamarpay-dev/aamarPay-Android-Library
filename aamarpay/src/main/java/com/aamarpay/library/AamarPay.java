@@ -41,7 +41,7 @@ public class AamarPay {
         public void onPaymentCancel(Boolean error, String message);
     }
 
-    private onInitListener listener;
+    private static onInitListener listener;
 
     public AamarPay(Context context, String store_id, String signature_key) {
         // Set the context
@@ -157,7 +157,7 @@ public class AamarPay {
 
                 @Override
                 public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                    Log.d("TEST_SDK", t.getMessage());
+                    listener.onInitFailure(true, t.getMessage());
                 }
             });
         } else {
@@ -214,7 +214,8 @@ public class AamarPay {
 
     }
 
-    private void onCancelListener() {
+    public static void onCancelListener() {
+        Log.d("TEST_", "DAASDA");
         listener.onPaymentCancel(false, "Payment cancelled by user.");
     }
 
@@ -230,9 +231,5 @@ public class AamarPay {
         }
 
         return sb.toString();
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("TEST_", "hjhgjh");
     }
 }

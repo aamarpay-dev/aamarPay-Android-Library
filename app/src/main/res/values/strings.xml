@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">aamarPay</string>
+    <string name="aamarpay_logo">aamarpay_logo</string>
+    <string name="customer_name">Customer Name</string>
+    <string name="aamarpay_test_payment">aamarPay Test Payment</string>
+    <string name="customer_email">Customer Email</string>
+    <string name="customer_mobile_number">Customer Mobile Number</string>
+    <string name="customer_address">Customer Address</string>
+    <string name="transaction_id">Transaction ID</string>
+    <string name="transaction_amount">Transaction Amount</string>
+    <string name="currency_name">Currency Name</string>
+    <string name="customer_city">Customer City</string>
+    <string name="customer_country">Customer Country</string>
+    <string name="payment_description">Payment Description</string>
+    <string name="pay_bdt_10">Pay BDT 10</string>
 </resources>

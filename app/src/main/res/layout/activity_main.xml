@@ -1,18 +1,205 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginBottom="60dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/aamarpay_logo"
+                    android:padding="20dp"
+                    android:src="@drawable/aamarpay_logo" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center"
+                    android:text="@string/aamarpay_test_payment"
+                    android:textColor="@color/blackText"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/transaction_id"
+                    android:textSize="16sp" />
+
+                <EditText
+                    style="@style/editTextStyle"
+                    android:background="@drawable/edit_text_background"
+                    android:hint="@string/transaction_id"
+                    android:inputType="text"
+                    tools:ignore="Autofill" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/transaction_amount"
+                    android:textSize="16sp" />
+
+                <EditText
+                    style="@style/editTextStyle"
+                    android:background="@drawable/edit_text_background"
+                    android:hint="@string/transaction_amount"
+                    android:inputType="text"
+                    android:text="10"
+                    tools:ignore="Autofill" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/currency_name"
+                    android:textSize="16sp" />
+
+                <EditText
+                    style="@style/editTextStyle"
+                    android:background="@drawable/edit_text_background"
+                    android:hint="@string/currency_name"
+                    android:inputType="text"
+                    android:text="BDT"
+                    tools:ignore="Autofill" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/customer_name"
+                    android:textSize="16sp" />
+
+                <EditText
+                    style="@style/editTextStyle"
+                    android:background="@drawable/edit_text_background"
+                    android:hint="@string/customer_name"
+                    android:inputType="text"
+                    android:text="Md. Rafat Hossain"
+                    tools:ignore="Autofill" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/customer_email"
+                    android:textSize="16sp" />
+
+                <EditText
+                    style="@style/editTextStyle"
+                    android:background="@drawable/edit_text_background"
+                    android:hint="@string/customer_email"
+                    android:inputType="text"
+                    android:text="rafat.hossain@softbd.com"
+                    tools:ignore="Autofill" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/customer_mobile_number"
+                    android:textSize="16sp" />
+
+                <EditText
+                    style="@style/editTextStyle"
+                    android:background="@drawable/edit_text_background"
+                    android:hint="@string/customer_mobile_number"
+                    android:inputType="phone"
+                    android:text="01704005054"
+                    tools:ignore="Autofill" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/customer_address"
+                    android:textSize="16sp" />
+
+                <EditText
+                    style="@style/editTextStyle"
+                    android:background="@drawable/edit_text_background"
+                    android:hint="@string/customer_address"
+                    android:inputType="text"
+                    android:text="53 Gausul Azam Avenue, Sector 14"
+                    tools:ignore="Autofill" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/customer_city"
+                    android:textSize="16sp" />
+
+                <EditText
+                    style="@style/editTextStyle"
+                    android:background="@drawable/edit_text_background"
+                    android:hint="@string/customer_city"
+                    android:inputType="text"
+                    android:text="Uttara, Dhaka"
+                    tools:ignore="Autofill" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/customer_country"
+                    android:textSize="16sp" />
+
+                <EditText
+                    style="@style/editTextStyle"
+                    android:background="@drawable/edit_text_background"
+                    android:hint="@string/customer_country"
+                    android:inputType="text"
+                    android:text="Bangladesh"
+                    tools:ignore="Autofill" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/payment_description"
+                    android:textSize="16sp" />
+
+                <EditText
+                    style="@style/editTextStyle"
+                    android:background="@drawable/edit_text_background"
+                    android:hint="@string/payment_description"
+                    android:inputType="text"
+                    android:text="T-Shirt"
+                    tools:ignore="Autofill" />
+            </LinearLayout>
+        </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimaryDark"
+        android:text="@string/pay_bdt_10"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+</RelativeLayout>

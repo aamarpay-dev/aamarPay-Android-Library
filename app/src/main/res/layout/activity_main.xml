@@ -49,6 +49,7 @@
                     android:textSize="16sp" />
 
                 <EditText
+                    android:id="@+id/trx_id"
                     style="@style/editTextStyle"
                     android:background="@drawable/edit_text_background"
                     android:hint="@string/transaction_id"
@@ -63,6 +64,7 @@
                     android:textSize="16sp" />
 
                 <EditText
+                    android:id="@+id/trx_amount"
                     style="@style/editTextStyle"
                     android:background="@drawable/edit_text_background"
                     android:hint="@string/transaction_amount"
@@ -78,6 +80,7 @@
                     android:textSize="16sp" />
 
                 <EditText
+                    android:id="@+id/trx_currency"
                     style="@style/editTextStyle"
                     android:background="@drawable/edit_text_background"
                     android:hint="@string/currency_name"
@@ -93,6 +96,7 @@
                     android:textSize="16sp" />
 
                 <EditText
+                    android:id="@+id/customer_name"
                     style="@style/editTextStyle"
                     android:background="@drawable/edit_text_background"
                     android:hint="@string/customer_name"
@@ -108,10 +112,11 @@
                     android:textSize="16sp" />
 
                 <EditText
+                    android:id="@+id/customer_email"
                     style="@style/editTextStyle"
                     android:background="@drawable/edit_text_background"
                     android:hint="@string/customer_email"
-                    android:inputType="text"
+                    android:inputType="textEmailAddress"
                     android:text="rafat.hossain@softbd.com"
                     tools:ignore="Autofill" />
 
@@ -123,6 +128,7 @@
                     android:textSize="16sp" />
 
                 <EditText
+                    android:id="@+id/customer_phone"
                     style="@style/editTextStyle"
                     android:background="@drawable/edit_text_background"
                     android:hint="@string/customer_mobile_number"
@@ -138,6 +144,7 @@
                     android:textSize="16sp" />
 
                 <EditText
+                    android:id="@+id/customer_address"
                     style="@style/editTextStyle"
                     android:background="@drawable/edit_text_background"
                     android:hint="@string/customer_address"
@@ -153,6 +160,7 @@
                     android:textSize="16sp" />
 
                 <EditText
+                    android:id="@+id/customer_city"
                     style="@style/editTextStyle"
                     android:background="@drawable/edit_text_background"
                     android:hint="@string/customer_city"
@@ -168,6 +176,7 @@
                     android:textSize="16sp" />
 
                 <EditText
+                    android:id="@+id/customer_country"
                     style="@style/editTextStyle"
                     android:background="@drawable/edit_text_background"
                     android:hint="@string/customer_country"
@@ -183,6 +192,7 @@
                     android:textSize="16sp" />
 
                 <EditText
+                    android:id="@+id/payment_description"
                     style="@style/editTextStyle"
                     android:background="@drawable/edit_text_background"
                     android:hint="@string/payment_description"
@@ -192,7 +202,6 @@
             </LinearLayout>
         </ScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
 
     <Button
         android:layout_width="match_parent"

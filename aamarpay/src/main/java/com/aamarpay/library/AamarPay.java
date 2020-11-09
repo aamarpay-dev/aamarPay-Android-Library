@@ -41,7 +41,7 @@ public class AamarPay {
         public void onPaymentCancel(Boolean error, String message);
     }
 
-    private static onInitListener listener;
+    public static onInitListener listener;
 
     public AamarPay(Context context, String store_id, String signature_key) {
         // Set the context
@@ -214,8 +214,7 @@ public class AamarPay {
 
     }
 
-    public static void onCancelListener() {
-        Log.d("TEST_", "DAASDA");
+    public void onCancelListener() {
         listener.onPaymentCancel(false, "Payment cancelled by user.");
     }
 

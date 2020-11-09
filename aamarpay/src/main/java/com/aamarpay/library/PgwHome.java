@@ -16,18 +16,17 @@ import java.lang.reflect.Method;
 
 import im.delight.android.webview.AdvancedWebView;
 
+import static com.aamarpay.library.AamarPay.listener;
+
 public class PgwHome extends AppCompatActivity implements AdvancedWebView.Listener {
 
     private AdvancedWebView mWebView;
-    private AamarPay aamarPay;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pgw_home);
-
-        aamarPay = new AamarPay(PgwHome.this, "", "");
 
         String payment_url = getIntent().getStringExtra("URL");
 
@@ -44,7 +43,7 @@ public class PgwHome extends AppCompatActivity implements AdvancedWebView.Listen
         } else if (url.contains("payment-fail")) {
 
         } else if (url.contains("payment-cancel")) {
-            AamarPay.onCancelListener();
+            listener.onPaymentCancel(false, "dadadsaad");
             finish();
         }
     }

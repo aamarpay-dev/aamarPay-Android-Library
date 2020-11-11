@@ -4,6 +4,17 @@
 
 An Android library for integrating aamarpay payment gateway. For more details visit www.aamarpay.com
 
+<p align="center">
+  <img src="PGW_INIT.jpeg" width="19%"/>
+  <img src="PGW_LOADING.jpeg" width="19%"/>
+  <img src="PGW_CARD.jpeg" width="19%"/>
+  <img src="PGW_MFS.jpeg" width="19%"/>
+  <img src="PGW_ERROR.jpeg" width="19%"/>
+</p>
+
+## Sample Code
+You can find the sample code here: [Sample Code](Sam)
+
 ## Installation
 Add the JitPack repository to your build file. Add it in your root `build.gradle` at the end of repositories:
 ```
@@ -123,6 +134,11 @@ aamarPay.getTransactionInfo("TRANSACTION_ID", new AamarPay.TransactionInfoListen
 
 ### Dialog Builder
 You can use the dialog builder to generate loading or error message popup as below.
+
+<p>
+  <img src="PGW_LOADING.jpeg" width="19%"/>
+  <img src="PGW_ERROR.jpeg" width="19%"/>
+</p>
 
 To use this, create an instance first, then call the popup as required.
 ```

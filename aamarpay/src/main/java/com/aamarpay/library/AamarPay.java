@@ -264,7 +264,8 @@ public class AamarPay {
         return sb.toString();
     }
 
-    public void getTransactionInfo(String transaction_id) {
+    public void getTransactionInfo(String transaction_id, TransactionInfoListener trx_listener) {
+        AamarPay.trxListener = trx_listener;
         OkHttpClient client = new OkHttpClient();
         String url = "";
         if (isTestMode) {

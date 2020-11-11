@@ -135,9 +135,10 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onPaymentCancel(Boolean error, String message) {
-                        Log.d("TEST_PC", message);
+                    public void onPaymentCancel(JSONObject jsonObject) {
+                        Log.d("TEST_PPF", jsonObject.toString());
                         dialogBuilder.dismissDialog();
+//                        aamarPay.getTransactionInfo("sdad");
                     }
                 });
             }

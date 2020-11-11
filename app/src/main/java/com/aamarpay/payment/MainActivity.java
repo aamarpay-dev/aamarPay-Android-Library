@@ -33,18 +33,28 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
 
 import im.delight.android.webview.AdvancedWebView;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements AdvancedWebView.Listener {
 
     private AdvancedWebView mWebView;
+
+    OkHttpClient client = new OkHttpClient();
+
     private AamarPay aamarPay;
 
     private AlertDialog alertDialog;
@@ -111,7 +121,8 @@ public class MainActivity extends AppCompatActivity implements AdvancedWebView.L
 
             @Override
             public void onPaymentCancel(Boolean error, String message) {
-                Log.d("TEST_", message);
+                Log.d("TEST_DER", message);
+//                okGTest();
             }
         });
 
@@ -174,6 +185,33 @@ public class MainActivity extends AppCompatActivity implements AdvancedWebView.L
 //        });
     }
 
+    private void okGTest() {
+        OkHttpClient client = new OkHttpClient();
+        String url = "https://secure.aamarpay.com/api/v1/trxcheck/request.php?request_id=WEP-SMZZ4ZM8EC&store_id=aamarpay&signature_key=28c78bb1f45112f5d40b956fe104645e&type=json";
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onResponse(okhttp3.@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    final String myResponse = response.body().string();
+                    MainActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d("TEST_DER", myResponse);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(okhttp3.@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
     private JsonObject ApiJsonMap(String trxID, String trxAmount, String trxCurrency, String customerName, String customerEmail, String customerPhone, String customerAddress, String customerCity, String customerCountry, String paymentDescription) {
 
         JsonObject gsonObject = new JsonObject();
@@ -204,6 +242,16 @@ public class MainActivity extends AppCompatActivity implements AdvancedWebView.L
         }
 
         return gsonObject;
+    }
+
+    String run(String url) throws IOException {
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            return response.body().string();
+        }
     }
 
     // Swipe refresh layout actions

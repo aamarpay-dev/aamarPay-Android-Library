@@ -32,13 +32,15 @@ public class AamarPay {
     private boolean isPaymentInfoSet, isCustomerInfoSet, autoGenerateTrx, isTestMode;
 
     public interface onInitListener {
-        public void onInitFailure(Boolean error, String message);
+        void onInitFailure(Boolean error, String message);
 
-        public void onPaymentSuccess(JsonObject jsonObject);
+        void onPaymentSuccess(JSONObject jsonObject);
 
-        public void onPaymentFailure(JsonObject jsonObject);
+        void onPaymentFailure(JsonObject jsonObject);
 
-        public void onPaymentCancel(Boolean error, String message);
+        void onPaymentProcessingFailed(Boolean error, String message);
+
+        void onPaymentCancel(Boolean error, String message);
     }
 
     public static onInitListener listener;
@@ -52,7 +54,7 @@ public class AamarPay {
         this.signature_key = signature_key;
 
         // set null or default listener or accept as argument to constructor
-        this.listener = null;
+        listener = null;
 
         // Set default false
         this.isCustomerInfoSet = false;
@@ -79,7 +81,7 @@ public class AamarPay {
 
     // Set custom trx ID
     public void setTransactionID(String transaction_id) {
-        this.trxID = transaction_id;
+        trxID = transaction_id;
     }
 
     // Set the trx parameter
@@ -107,7 +109,7 @@ public class AamarPay {
     }
 
     public void initPGW(onInitListener listener) {
-        this.listener = listener;
+        AamarPay.listener = listener;
         if (isPaymentInfoSet && isCustomerInfoSet) {
             if (autoGenerateTrx) {
                 trxID = generate_trx_id();
@@ -143,6 +145,10 @@ public class AamarPay {
                                 String payment_url = jsonObject.getString("payment_url");
                                 Intent intent = new Intent(context, PgwHome.class);
                                 intent.putExtra("URL", payment_url);
+                                intent.putExtra("TEST_MODE", isTestMode);
+                                intent.putExtra("TRX_ID", trxID);
+                                intent.putExtra("STORE_ID", store_id);
+                                intent.putExtra("SIGNATURE_KEY", signature_key);
                                 ((Activity) context).startActivityForResult(intent, 1000);
                             } catch (JSONException e) {
                                 listener.onInitFailure(true, e.getMessage());
@@ -178,7 +184,7 @@ public class AamarPay {
             jsonObj_.put("cus_city", this.customerCity);
             jsonObj_.put("cus_country", this.customerCountry);
             jsonObj_.put("amount", this.trxAmount);
-            jsonObj_.put("tran_id", this.trxID);
+            jsonObj_.put("tran_id", trxID);
             jsonObj_.put("currency", this.trxCurrency);
             jsonObj_.put("success_url", "payment-success");
             jsonObj_.put("fail_url", "payment-fail");
@@ -212,10 +218,6 @@ public class AamarPay {
 
     private void onFailureListener() {
 
-    }
-
-    public void onCancelListener() {
-        listener.onPaymentCancel(false, "Payment cancelled by user.");
     }
 
     public String generate_trx_id() {

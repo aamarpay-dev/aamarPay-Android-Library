@@ -44,7 +44,6 @@ public class DialogBuilder {
         } else {
             view = LayoutInflater.from(context).inflate(R.layout.loading_popup_old, null);
         }
-        alertDialogBuilder.setCancelable(false);
         alertDialogBuilder.setView(view);
         alertDialog = alertDialogBuilder.create();
         alertDialog.show();
@@ -78,7 +77,6 @@ public class DialogBuilder {
         }
         TextView retryMessage = view.findViewById(R.id.custom_message);
         retryMessage.setText(retryMsg);
-        alertDialogBuilder.setCancelable(false);
         alertDialogBuilder.setView(view);
         alertDialog = alertDialogBuilder.create();
         alertDialog.show();

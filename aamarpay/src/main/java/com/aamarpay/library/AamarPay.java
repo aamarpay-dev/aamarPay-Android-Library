@@ -41,7 +41,7 @@ public class AamarPay {
 
         void onPaymentProcessingFailed(JSONObject jsonObject);
 
-        void onPaymentCancel(Boolean error, String message);
+        void onPaymentCancel(JSONObject jsonObject);
     }
 
     public interface TransactionInfoListener {

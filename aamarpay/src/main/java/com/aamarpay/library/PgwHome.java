@@ -73,7 +73,7 @@ public class PgwHome extends AppCompatActivity implements AdvancedWebView.Listen
             AsyncTrxVerification trxVerification = new AsyncTrxVerification();
             trxVerification.execute();
         } else if (url.contains("payment-cancel")) {
-            listener.onPaymentCancel(false, "Payment cancelled by user.");
+            listener.onPaymentCancel(createFailedMap("Payment cancelled by user."));
             finish();
         }
     }
@@ -152,24 +152,24 @@ public class PgwHome extends AppCompatActivity implements AdvancedWebView.Listen
                                         listener.onPaymentFailure(jsonObject);
                                     }
                                 } catch (JSONException e) {
-                                    listener.onPaymentProcessingFailed(createProcessingFailedMap(e.getMessage()));
+                                    listener.onPaymentProcessingFailed(createFailedMap(e.getMessage()));
                                 }
                             }
                         });
                     } catch (Exception e) {
-                        listener.onPaymentProcessingFailed(createProcessingFailedMap(e.getMessage()));
+                        listener.onPaymentProcessingFailed(createFailedMap(e.getMessage()));
                     }
                 }
             }
 
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                listener.onPaymentProcessingFailed(createProcessingFailedMap(e.getMessage()));
+                listener.onPaymentProcessingFailed(createFailedMap(e.getMessage()));
             }
         });
     }
 
-    private JSONObject createProcessingFailedMap(String err_message) {
+    private JSONObject createFailedMap(String err_message) {
         JsonObject gsonObject = new JsonObject();
         JSONObject jsonObj_ = new JSONObject();
         try {

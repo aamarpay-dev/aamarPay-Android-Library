@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.aamarpay.library.AamarPay;
+import com.aamarpay.library.DialogBuilder;
 
 import org.json.JSONObject;
 
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AlertDialog alertDialog;
     private AamarPay aamarPay;
+    private DialogBuilder dialogBuilder;
     private String trxID, trxAmount, trxCurrency, customerName, customerEmail, customerPhone, customerAddress, customerCity, customerCountry, paymentDescription;
     EditText trx_id, trx_amount, trx_currency, customer_name, customer_email, customer_phone, customer_address, customer_city, customer_country, payment_description;
 
@@ -27,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        dialogBuilder = new DialogBuilder(MainActivity.this, alertDialog);
 
         // Reference to fields
         trx_id = findViewById(R.id.trx_id);
@@ -41,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
         payment_description = findViewById(R.id.payment_description);
 
         // Initiate payment
-        aamarPay = new AamarPay(MainActivity.this, "khaidaitoday", "3cc65e1dd9fc945f99b2e117ead299f3");
-//        aamarPay = new AamarPay(MainActivity.this, "aamarpay", "28c78bb1f45112f5d40b956fe104645a");
+//        aamarPay = new AamarPay(MainActivity.this, "khaidaitoday", "3cc65e1dd9fc945f99b2e117ead299f3");
+        aamarPay = new AamarPay(MainActivity.this, "aamarpay", "28c78bb1f45112f5d40b956fe104645a");
         aamarPay.testMode(true);
         aamarPay.autoGenerateTransactionID(true);
 
@@ -101,32 +105,39 @@ public class MainActivity extends AppCompatActivity {
         payNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialogBuilder.showLoading();
                 aamarPay.setTransactionParameter(trxAmount, trxCurrency, paymentDescription);
                 aamarPay.setCustomerDetails(customerName, customerEmail, customerPhone, customerAddress, customerCity, customerCountry);
                 aamarPay.initPGW(new AamarPay.onInitListener() {
                     @Override
                     public void onInitFailure(Boolean error, String message) {
                         Log.d("TEST_IF", message);
+                        dialogBuilder.dismissDialog();
+                        dialogBuilder.errorPopUp(message);
                     }
 
                     @Override
                     public void onPaymentSuccess(JSONObject jsonObject) {
                         Log.d("TEST_PS", jsonObject.toString());
+                        dialogBuilder.dismissDialog();
                     }
 
                     @Override
                     public void onPaymentFailure(JSONObject jsonObject) {
                         Log.d("TEST_PF", jsonObject.toString());
+                        dialogBuilder.dismissDialog();
                     }
 
                     @Override
                     public void onPaymentProcessingFailed(JSONObject jsonObject) {
                         Log.d("TEST_PPF", jsonObject.toString());
+                        dialogBuilder.dismissDialog();
                     }
 
                     @Override
                     public void onPaymentCancel(Boolean error, String message) {
                         Log.d("TEST_PC", message);
+                        dialogBuilder.dismissDialog();
                     }
                 });
             }

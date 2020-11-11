@@ -152,8 +152,8 @@ public class AamarPay {
                     try {
                         if (response.body() != null) {
                             resp = response.body().string();
-                            if (resp.equals("Invalid Store ID")) {
-                                listener.onInitFailure(true, "Invalid Store ID");
+                            if (resp.contains("Invalid Store ID")) {
+                                listener.onInitFailure(true, "Invalid Store ID. Please check your credentials. Also, did you forget to disable test mode?");
                             } else {
                                 try {
                                     final JSONObject jsonObject = new JSONObject(resp);

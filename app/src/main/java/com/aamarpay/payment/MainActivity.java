@@ -12,10 +12,13 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -101,10 +104,45 @@ public class MainActivity extends AppCompatActivity implements AdvancedWebView.L
         paymentDescription = payment_description.getText().toString();
 
         Button payNow = findViewById(R.id.payButton);
-        payNow.setText(String.format("Pay %s %s", trxCurrency.toUpperCase(), trxAmount));
+
+        trx_amount.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                payNow.setText(String.format("Pay %s %s", trxCurrency.toUpperCase(), s.toString()));
+            }
+        });
+
+        trx_currency.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                payNow.setText(String.format("Pay %s %s", s.toString().toUpperCase(), trxAmount));
+            }
+        });
+
         payNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 aamarPay.setTransactionParameter(trxAmount, trxCurrency, paymentDescription);
                 aamarPay.setCustomerDetails(customerName, customerEmail, customerPhone, customerAddress, customerCity, customerCountry);
                 aamarPay.initPGW(new AamarPay.onInitListener() {

@@ -37,7 +37,6 @@ import static com.aamarpay.library.AamarPay.listener;
 
 public class PgwHome extends AppCompatActivity implements AdvancedWebView.Listener {
 
-    private AdvancedWebView mWebView;
     private View pgw_loading;
     private String store_id, signature_key, trxID;
     private boolean isTestMode, paymentSuccess = false;
@@ -56,7 +55,7 @@ public class PgwHome extends AppCompatActivity implements AdvancedWebView.Listen
         signature_key = getIntent().getStringExtra("SIGNATURE_KEY");
         isTestMode = getIntent().getBooleanExtra("TEST_MODE", true);
 
-        mWebView = (AdvancedWebView) findViewById(R.id.pgwHome);
+        AdvancedWebView mWebView = (AdvancedWebView) findViewById(R.id.pgwHome);
         mWebView.setListener(this, this);
         mWebView.setMixedContentAllowed(false);
         mWebView.loadUrl(payment_url);

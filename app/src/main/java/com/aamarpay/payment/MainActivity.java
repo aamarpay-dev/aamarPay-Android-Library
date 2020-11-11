@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -79,8 +80,8 @@ public class MainActivity extends AppCompatActivity implements AdvancedWebView.L
         payment_description = findViewById(R.id.payment_description);
 
         // Initiate payment
-        aamarPay = new AamarPay(MainActivity.this, "aamarpay", "28c78bb1f45112f5d40b956fe104645a");
-        aamarPay.testMode(true);
+        aamarPay = new AamarPay(MainActivity.this, "khaidaitoday", "3cc65e1dd9fc945f99b2e117ead299f3");
+        aamarPay.testMode(false);
         aamarPay.autoGenerateTransactionID(true);
 
         // Generate unique transaction id
@@ -99,34 +100,39 @@ public class MainActivity extends AppCompatActivity implements AdvancedWebView.L
         customerCountry = customer_country.getText().toString();
         paymentDescription = payment_description.getText().toString();
 
-        aamarPay.setTransactionParameter(trxAmount, trxCurrency, paymentDescription);
-        aamarPay.setCustomerDetails(customerName, customerEmail, customerPhone, customerAddress, customerCity, customerCountry);
-
-        aamarPay.initPGW(new AamarPay.onInitListener() {
+        Button payNow = findViewById(R.id.payButton);
+        payNow.setText(String.format("Pay %s %s", trxCurrency.toUpperCase(), trxAmount));
+        payNow.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onInitFailure(Boolean error, String message) {
-                Log.d("TEST_", message);
-            }
+            public void onClick(View v) {
+                aamarPay.setTransactionParameter(trxAmount, trxCurrency, paymentDescription);
+                aamarPay.setCustomerDetails(customerName, customerEmail, customerPhone, customerAddress, customerCity, customerCountry);
+                aamarPay.initPGW(new AamarPay.onInitListener() {
+                    @Override
+                    public void onInitFailure(Boolean error, String message) {
+                        Log.d("TEST_", message);
+                    }
 
-            @Override
-            public void onPaymentSuccess(JSONObject jsonObject) {
-                Log.d("TEST_DER", jsonObject.toString());
-            }
+                    @Override
+                    public void onPaymentSuccess(JSONObject jsonObject) {
+                        Log.d("TEST_DER", jsonObject.toString());
+                    }
 
-            @Override
-            public void onPaymentFailure(JsonObject jsonObject) {
-                Log.d("TEST_DER", jsonObject.toString());
-            }
+                    @Override
+                    public void onPaymentFailure(JSONObject jsonObject) {
+                        Log.d("TEST_DER", jsonObject.toString());
+                    }
 
-            @Override
-            public void onPaymentProcessingFailed(Boolean error, String message) {
-                Log.d("TEST_DER", message);
-            }
+                    @Override
+                    public void onPaymentProcessingFailed(Boolean error, String message) {
+                        Log.d("TEST_DER", message);
+                    }
 
-            @Override
-            public void onPaymentCancel(Boolean error, String message) {
-                Log.d("TEST_DER", message);
-//                okGTest();
+                    @Override
+                    public void onPaymentCancel(Boolean error, String message) {
+                        Log.d("TEST_DER", message);
+                    }
+                });
             }
         });
 

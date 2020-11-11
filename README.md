@@ -13,7 +13,7 @@ An Android library for integrating aamarpay payment gateway. For more details vi
 </p>
 
 ## Sample Code
-You can find the sample code here: [Sample Code](https://github.com/rafathossain96/aamarPay-Payment-Gateway-Android-Sample)
+You can find the sample code here: [Sample Code](https://github.com/aamarpay-dev/aamarPay-Payment-Gateway-Android-Sample)
 
 ## Sample APK
 Download the apk here: [APK](https://drive.google.com/file/d/1JsnfzryIgnf1L1c3zn3XJbYSe-IUK7mH/view?usp=sharing)

@@ -35,7 +35,6 @@ public class PgwHome extends AppCompatActivity implements AdvancedWebView.Listen
     private String store_id, signature_key, trxID;
     private boolean isTestMode, paymentSuccess = false;
 
-    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,8 +118,6 @@ public class PgwHome extends AppCompatActivity implements AdvancedWebView.Listen
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            pgw_loading.setVisibility(View.GONE);
-            finish();
         }
     }
 
@@ -154,10 +151,14 @@ public class PgwHome extends AppCompatActivity implements AdvancedWebView.Listen
                                 } catch (JSONException e) {
                                     listener.onPaymentProcessingFailed(createFailedMap(e.getMessage()));
                                 }
+                                pgw_loading.setVisibility(View.GONE);
+                                finish();
                             }
                         });
                     } catch (Exception e) {
                         listener.onPaymentProcessingFailed(createFailedMap(e.getMessage()));
+                        pgw_loading.setVisibility(View.GONE);
+                        finish();
                     }
                 }
             }
@@ -165,6 +166,8 @@ public class PgwHome extends AppCompatActivity implements AdvancedWebView.Listen
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 listener.onPaymentProcessingFailed(createFailedMap(e.getMessage()));
+                pgw_loading.setVisibility(View.GONE);
+                finish();
             }
         });
     }

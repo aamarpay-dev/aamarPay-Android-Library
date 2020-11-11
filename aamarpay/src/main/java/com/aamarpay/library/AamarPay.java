@@ -63,6 +63,7 @@ public class AamarPay {
 
         // set null or default listener or accept as argument to constructor
         listener = null;
+        trxListener = null;
 
         // Set default false
         this.isCustomerInfoSet = false;

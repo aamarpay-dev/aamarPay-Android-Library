@@ -15,6 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.aamarpay.library.AamarPay;
 import com.aamarpay.library.DialogBuilder;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Reference to fields
         trx_id = findViewById(R.id.trx_id);
+        trx_id.setFocusable(false);
         trx_amount = findViewById(R.id.trx_amount);
         trx_currency = findViewById(R.id.trx_currency);
         customer_name = findViewById(R.id.customer_name);
@@ -45,13 +47,17 @@ public class MainActivity extends AppCompatActivity {
         payment_description = findViewById(R.id.payment_description);
 
         // Initiate payment
-//        aamarPay = new AamarPay(MainActivity.this, "khaidaitoday", "3cc65e1dd9fc945f99b2e117ead299f3");
         aamarPay = new AamarPay(MainActivity.this, "aamarpay", "28c78bb1f45112f5d40b956fe104645a");
+
+        // Set Test Mode
         aamarPay.testMode(true);
+
+        // Auto generate Trx
         aamarPay.autoGenerateTransactionID(true);
 
         // Generate unique transaction id
         trxID = aamarPay.generate_trx_id();
+
         // Setting the values to fields
         trx_id.setText(trxID);
 
@@ -81,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+                trxAmount = s.toString();
                 payNow.setText(String.format("Pay %s %s", trxCurrency.toUpperCase(), s.toString()));
             }
         });
@@ -98,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+                trxCurrency = s.toString();
                 payNow.setText(String.format("Pay %s %s", s.toString().toUpperCase(), trxAmount));
             }
         });
@@ -136,9 +144,23 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onPaymentCancel(JSONObject jsonObject) {
-                        Log.d("TEST_PPF", jsonObject.toString());
-                        dialogBuilder.dismissDialog();
-//                        aamarPay.getTransactionInfo("sdad");
+                        Log.d("TEST_PC", jsonObject.toString());
+                        try {
+                            aamarPay.getTransactionInfo(jsonObject.getString("trx_id"), new AamarPay.TransactionInfoListener() {
+                                @Override
+                                public void onSuccess(JSONObject jsonObject) {
+                                    Log.d("TEST_", jsonObject.toString());
+                                    dialogBuilder.dismissDialog();
+                                }
+
+                                @Override
+                                public void onFailure(Boolean error, String message) {
+                                    Log.d("TEST_", message);
+                                }
+                            });
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
             }

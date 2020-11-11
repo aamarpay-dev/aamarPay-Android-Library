@@ -40,7 +40,7 @@ compileOptions {
 Add the following line to your `dependencies` section of your build script:
 ```
 dependencies {
-  implementation 'implementation 'com.github.aamarpay-dev:aamarPay-Android-Library:1.1''
+  implementation 'implementation 'com.github.aamarpay-dev:aamarPay-Android-Library:1.1'
 }
 ```
 

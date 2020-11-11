@@ -109,27 +109,31 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onInitFailure(Boolean error, String message) {
                         Log.d("TEST_IF", message);
+                        dismissDialog();
                     }
 
                     @Override
                     public void onPaymentSuccess(JSONObject jsonObject) {
                         Log.d("TEST_PS", jsonObject.toString());
-                        alertDialog.dismiss();
+                        dismissDialog();
                     }
 
                     @Override
                     public void onPaymentFailure(JSONObject jsonObject) {
                         Log.d("TEST_PF", jsonObject.toString());
+                        dismissDialog();
                     }
 
                     @Override
                     public void onPaymentProcessingFailed(Boolean error, String message) {
                         Log.d("TEST_PPF", message);
+                        dismissDialog();
                     }
 
                     @Override
                     public void onPaymentCancel(Boolean error, String message) {
                         Log.d("TEST_PC", message);
+                        dismissDialog();
                     }
                 });
             }
@@ -155,5 +159,11 @@ public class MainActivity extends AppCompatActivity {
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
+    }
+
+    private void dismissDialog(){
+        if(alertDialog.isShowing()){
+            alertDialog.dismiss();
+        }
     }
 }

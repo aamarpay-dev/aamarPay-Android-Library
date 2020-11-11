@@ -9,21 +9,19 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.aamarpay.library.Retrofit.LiveClient;
 import com.aamarpay.library.Retrofit.SandboxClient;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,6 +29,9 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Random;
 
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -49,12 +50,19 @@ public class AamarPay {
 
         void onPaymentFailure(JSONObject jsonObject);
 
-        void onPaymentProcessingFailed(Boolean error, String message);
+        void onPaymentProcessingFailed(JSONObject jsonObject);
 
         void onPaymentCancel(Boolean error, String message);
     }
 
+    public interface TransactionInfoListener {
+        void onSuccess(JSONObject jsonObject);
+
+        void onFailure(Boolean error, String message);
+    }
+
     public static onInitListener listener;
+    public static TransactionInfoListener trxListener;
 
     public AamarPay(Context context, String store_id, String signature_key) {
         // Set the context
@@ -331,5 +339,47 @@ public class AamarPay {
             layoutParams.width = dialogWindowWidth;
             alertDialog.getWindow().setAttributes(layoutParams);
         }
+    }
+
+    public void getTransactionInfo(String transaction_id) {
+        OkHttpClient client = new OkHttpClient();
+        String url = "";
+        if (isTestMode) {
+            url = "https://sandbox.aamarpay.com/api/v1/trxcheck/request.php?request_id=" + transaction_id + "&store_id=" + store_id + "&signature_key=" + signature_key + "&type=json";
+        } else {
+            url = "https://secure.aamarpay.com/api/v1/trxcheck/request.php?request_id=" + transaction_id + "&store_id=" + store_id + "&signature_key=" + signature_key + "&type=json";
+        }
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onResponse(@NotNull okhttp3.Call call, @NotNull okhttp3.Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    try {
+                        final String myResponse = response.body().string();
+                        ((Activity) context).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    JSONObject jsonObject = new JSONObject(myResponse);
+                                    trxListener.onSuccess(jsonObject);
+                                } catch (JSONException e) {
+                                    trxListener.onFailure(true, e.getMessage());
+                                }
+                            }
+                        });
+                    } catch (Exception e) {
+                        trxListener.onFailure(true, e.getMessage());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull okhttp3.Call call, @NotNull IOException e) {
+                trxListener.onFailure(true, e.getMessage());
+            }
+        });
+
     }
 }

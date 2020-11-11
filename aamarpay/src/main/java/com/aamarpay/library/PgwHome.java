@@ -1,33 +1,24 @@
 package com.aamarpay.library;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import im.delight.android.webview.AdvancedWebView;
 import okhttp3.Call;
@@ -161,20 +152,37 @@ public class PgwHome extends AppCompatActivity implements AdvancedWebView.Listen
                                         listener.onPaymentFailure(jsonObject);
                                     }
                                 } catch (JSONException e) {
-                                    listener.onPaymentProcessingFailed(true, "Payment processing failed due to transaction verification failure.");
+                                    listener.onPaymentProcessingFailed(createProcessingFailedMap(e.getMessage()));
                                 }
                             }
                         });
                     } catch (Exception e) {
-                        listener.onPaymentProcessingFailed(true, "Payment processing failed due to transaction verification failure.");
+                        listener.onPaymentProcessingFailed(createProcessingFailedMap(e.getMessage()));
                     }
                 }
             }
 
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                listener.onPaymentProcessingFailed(true, "Payment processing failed due to transaction verification failure.");
+                listener.onPaymentProcessingFailed(createProcessingFailedMap(e.getMessage()));
             }
         });
+    }
+
+    private JSONObject createProcessingFailedMap(String err_message) {
+        JsonObject gsonObject = new JsonObject();
+        JSONObject jsonObj_ = new JSONObject();
+        try {
+            jsonObj_.put("error", true);
+            jsonObj_.put("trx_id", trxID);
+            jsonObj_.put("error_message", err_message);
+
+            JsonParser jsonParser = new JsonParser();
+            gsonObject = (JsonObject) jsonParser.parse(jsonObj_.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return jsonObj_;
     }
 }

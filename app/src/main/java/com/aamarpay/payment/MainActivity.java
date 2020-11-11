@@ -85,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements AdvancedWebView.L
 
         // Generate unique transaction id
         trxID = aamarPay.generate_trx_id();
-
         // Setting the values to fields
         trx_id.setText(trxID);
 
@@ -110,13 +109,18 @@ public class MainActivity extends AppCompatActivity implements AdvancedWebView.L
             }
 
             @Override
-            public void onPaymentSuccess(JsonObject jsonObject) {
-
+            public void onPaymentSuccess(JSONObject jsonObject) {
+                Log.d("TEST_DER", jsonObject.toString());
             }
 
             @Override
             public void onPaymentFailure(JsonObject jsonObject) {
+                Log.d("TEST_DER", jsonObject.toString());
+            }
 
+            @Override
+            public void onPaymentProcessingFailed(Boolean error, String message) {
+                Log.d("TEST_DER", message);
             }
 
             @Override
@@ -127,7 +131,6 @@ public class MainActivity extends AppCompatActivity implements AdvancedWebView.L
         });
 
 //        showLoading();
-
         // Swipe refresh layout actions
         swipeRefresh();
 

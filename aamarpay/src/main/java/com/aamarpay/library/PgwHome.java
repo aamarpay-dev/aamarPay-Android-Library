@@ -40,7 +40,7 @@ public class PgwHome extends AppCompatActivity implements AdvancedWebView.Listen
     private AdvancedWebView mWebView;
     private View pgw_loading;
     private String store_id, signature_key, trxID;
-    private boolean isTestMode;
+    private boolean isTestMode, paymentSuccess = false;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -66,10 +66,13 @@ public class PgwHome extends AppCompatActivity implements AdvancedWebView.Listen
     public void onPageStarted(String url, Bitmap favicon) {
         pgw_loading.setVisibility(View.VISIBLE);
         if (url.contains("payment-success")) {
+            paymentSuccess = true;
             AsyncTrxVerification trxVerification = new AsyncTrxVerification();
             trxVerification.execute();
         } else if (url.contains("payment-fail")) {
-//            listener.onPaymentFailure(false, "Payment cancelled by user.");
+            paymentSuccess = false;
+            AsyncTrxVerification trxVerification = new AsyncTrxVerification();
+            trxVerification.execute();
         } else if (url.contains("payment-cancel")) {
             listener.onPaymentCancel(false, "Payment cancelled by user.");
             finish();
@@ -145,7 +148,11 @@ public class PgwHome extends AppCompatActivity implements AdvancedWebView.Listen
                             public void run() {
                                 try {
                                     JSONObject jsonObject = new JSONObject(myResponse);
-                                    listener.onPaymentSuccess(jsonObject);
+                                    if (paymentSuccess) {
+                                        listener.onPaymentSuccess(jsonObject);
+                                    } else {
+                                        listener.onPaymentFailure(jsonObject);
+                                    }
                                 } catch (JSONException e) {
                                     listener.onPaymentProcessingFailed(true, "Payment processing failed due to transaction verification failure.");
                                 }

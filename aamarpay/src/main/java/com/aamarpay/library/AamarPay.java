@@ -36,7 +36,7 @@ public class AamarPay {
 
         void onPaymentSuccess(JSONObject jsonObject);
 
-        void onPaymentFailure(JsonObject jsonObject);
+        void onPaymentFailure(JSONObject jsonObject);
 
         void onPaymentProcessingFailed(Boolean error, String message);
 
@@ -168,6 +168,44 @@ public class AamarPay {
             });
         } else {
             // Live
+            Call<ResponseBody> call = LiveClient
+                    .getInstance()
+                    .getApi()
+                    .init_payment(createJSONMap());
+
+            call.enqueue(new retrofit2.Callback<ResponseBody>() {
+                @Override
+                public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                    String resp = null;
+                    try {
+                        if (response.body() != null) {
+                            resp = response.body().string();
+                            try {
+                                final JSONObject jsonObject = new JSONObject(resp);
+                                String payment_url = jsonObject.getString("payment_url");
+                                Intent intent = new Intent(context, PgwHome.class);
+                                intent.putExtra("URL", payment_url);
+                                intent.putExtra("TEST_MODE", isTestMode);
+                                intent.putExtra("TRX_ID", trxID);
+                                intent.putExtra("STORE_ID", store_id);
+                                intent.putExtra("SIGNATURE_KEY", signature_key);
+                                ((Activity) context).startActivityForResult(intent, 1000);
+                            } catch (JSONException e) {
+                                listener.onInitFailure(true, e.getMessage());
+                                e.printStackTrace();
+                            }
+                        }
+                    } catch (IOException e) {
+                        listener.onInitFailure(true, e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                    listener.onInitFailure(true, t.getMessage());
+                }
+            });
         }
     }
 

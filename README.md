@@ -1,5 +1,5 @@
 # aamarPay Android Library
-[![](https://jitpack.io/v/rafathossain96/aamarPay-Android-Library.svg)](https://jitpack.io/#rafathossain96/aamarPay-Android-Library)
+[![](https://jitpack.io/v/aamarpay-dev/aamarPay-Android-Library.svg)](https://jitpack.io/#aamarpay-dev/aamarPay-Android-Library)
 [![API](https://img.shields.io/badge/API-16%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=16)
 
 An Android library for integrating aamarpay payment gateway. For more details visit www.aamarpay.com
@@ -40,7 +40,7 @@ compileOptions {
 Add the following line to your `dependencies` section of your build script:
 ```
 dependencies {
-  implementation 'com.github.rafathossain96:aamarPay-Android-Library:1.0'
+  implementation 'implementation 'com.github.aamarpay-dev:aamarPay-Android-Library:1.1''
 }
 ```
 

@@ -26,10 +26,18 @@ allprojects {
 }
 ```
 
+Add the following line to your `android` section of your build script:
+```
+compileOptions {
+  sourceCompatibility JavaVersion.VERSION_1_8
+  targetCompatibility JavaVersion.VERSION_1_8
+}
+```
+
 Add the following line to your `dependencies` section of your build script:
 ```
 dependencies {
-  implementation 'implementation 'com.github.rafathossain96:aamarPay-Android-Library:1.0'
+  implementation 'com.github.rafathossain96:aamarPay-Android-Library:1.0'
 }
 ```
 

@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -138,6 +139,7 @@ public class AamarPay {
 
     private void initGateway() {
         if (isTestMode) {
+            // Sandbox
             Call<ResponseBody> call = SandboxClient
                     .getInstance()
                     .getApi()
@@ -150,24 +152,26 @@ public class AamarPay {
                     try {
                         if (response.body() != null) {
                             resp = response.body().string();
-                            try {
-                                final JSONObject jsonObject = new JSONObject(resp);
-                                String payment_url = jsonObject.getString("payment_url");
-                                Intent intent = new Intent(context, PgwHome.class);
-                                intent.putExtra("URL", payment_url);
-                                intent.putExtra("TEST_MODE", isTestMode);
-                                intent.putExtra("TRX_ID", trxID);
-                                intent.putExtra("STORE_ID", store_id);
-                                intent.putExtra("SIGNATURE_KEY", signature_key);
-                                ((Activity) context).startActivityForResult(intent, 1000);
-                            } catch (JSONException e) {
-                                listener.onInitFailure(true, e.getMessage());
-                                e.printStackTrace();
+                            if (resp.equals("Invalid Store ID")) {
+                                listener.onInitFailure(true, "Invalid Store ID");
+                            } else {
+                                try {
+                                    final JSONObject jsonObject = new JSONObject(resp);
+                                    String payment_url = jsonObject.getString("payment_url");
+                                    Intent intent = new Intent(context, PgwHome.class);
+                                    intent.putExtra("URL", payment_url);
+                                    intent.putExtra("TEST_MODE", isTestMode);
+                                    intent.putExtra("TRX_ID", trxID);
+                                    intent.putExtra("STORE_ID", store_id);
+                                    intent.putExtra("SIGNATURE_KEY", signature_key);
+                                    ((Activity) context).startActivityForResult(intent, 1000);
+                                } catch (JSONException e) {
+                                    listener.onInitFailure(true, e.getMessage());
+                                }
                             }
                         }
                     } catch (IOException e) {
                         listener.onInitFailure(true, e.getMessage());
-                        e.printStackTrace();
                     }
                 }
 
@@ -234,9 +238,9 @@ public class AamarPay {
             jsonObj_.put("amount", this.trxAmount);
             jsonObj_.put("tran_id", trxID);
             jsonObj_.put("currency", this.trxCurrency);
-            jsonObj_.put("success_url", "payment-success");
-            jsonObj_.put("fail_url", "payment-fail");
-            jsonObj_.put("cancel_url", "payment-cancel");
+            jsonObj_.put("success_url", "android-sdk/payment-success.html");
+            jsonObj_.put("fail_url", "android-sdk/payment-fail.html");
+            jsonObj_.put("cancel_url", "android-sdk/payment-cancel.html");
             jsonObj_.put("desc", this.paymentDescription);
             jsonObj_.put("type", "json");
 
@@ -247,25 +251,6 @@ public class AamarPay {
         }
 
         return gsonObject;
-    }
-
-    private void onSuccessListener() {
-        JsonObject gsonObject = new JsonObject();
-        try {
-            JSONObject jsonObj_ = new JSONObject();
-            jsonObj_.put("error", false);
-            jsonObj_.put("payment_url", "google.com");
-
-            JsonParser jsonParser = new JsonParser();
-            gsonObject = (JsonObject) jsonParser.parse(jsonObj_.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-//        listener.onPaymentCancel();
-    }
-
-    private void onFailureListener() {
-
     }
 
     public String generate_trx_id() {
@@ -286,7 +271,7 @@ public class AamarPay {
     public void showLoading(AlertDialog alertDialog) {
         // Get screen width and height in pixels
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        ((Activity)context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         // The absolute width of the available display size in pixels.
         int displayWidth = displayMetrics.widthPixels;
         // The absolute height of the available display size in pixels.
@@ -302,6 +287,40 @@ public class AamarPay {
         } else {
             view = LayoutInflater.from(context).inflate(R.layout.loading_popup_old, null);
         }
+        alertDialogBuilder.setCancelable(false);
+        alertDialogBuilder.setView(view);
+        alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            layoutParams.copyFrom(alertDialog.getWindow().getAttributes());
+            layoutParams.width = dialogWindowWidth;
+            alertDialog.getWindow().setAttributes(layoutParams);
+        }
+    }
+
+    @SuppressLint("InflateParams")
+    public void errorPopUp(AlertDialog alertDialog, String retryMsg) {
+        // Get screen width and height in pixels
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        // The absolute width of the available display size in pixels.
+        int displayWidth = displayMetrics.widthPixels;
+        // The absolute height of the available display size in pixels.
+        // Initialize a new window manager layout parameters
+        // Set alert dialog width equal to screen width 70%
+        int dialogWindowWidth = (int) (displayWidth * 0.7f);
+        // Set alert dialog height equal to screen height 70%
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        View view;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            view = LayoutInflater.from(context).inflate(R.layout.error_popup, null);
+        } else {
+            view = LayoutInflater.from(context).inflate(R.layout.error_popup_old, null);
+        }
+        TextView retryMessage = view.findViewById(R.id.custom_message);
+        retryMessage.setText(retryMsg);
         alertDialogBuilder.setCancelable(false);
         alertDialogBuilder.setView(view);
         alertDialog = alertDialogBuilder.create();

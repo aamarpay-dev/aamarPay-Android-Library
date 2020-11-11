@@ -94,7 +94,6 @@ public class PgwHome extends AppCompatActivity implements AdvancedWebView.Listen
 
     @Override
     public void onPageError(int errorCode, String description, String failingUrl) {
-
     }
 
     @Override

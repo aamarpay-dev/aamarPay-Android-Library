@@ -16,7 +16,7 @@ An Android library for integrating aamarpay payment gateway. For more details vi
 You can find the sample code here: [Sample Code](https://github.com/rafathossain96/aamarPay-Payment-Gateway-Android-Sample)
 
 ## Sample APK
-Download the apk here: [APK](https://gofile.io/d/N9XL0d)
+Download the apk here: [APK](https://drive.google.com/file/d/1JsnfzryIgnf1L1c3zn3XJbYSe-IUK7mH/view?usp=sharing)
 
 ## Installation
 Add the JitPack repository to your build file. Add it in your root `build.gradle` at the end of repositories:

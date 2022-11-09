@@ -236,9 +236,9 @@ public class AamarPay {
             jsonObj_.put("amount", this.trxAmount);
             jsonObj_.put("tran_id", trxID);
             jsonObj_.put("currency", this.trxCurrency);
-            jsonObj_.put("success_url", "android-sdk/payment-success.html");
-            jsonObj_.put("fail_url", "android-sdk/payment-fail.html");
-            jsonObj_.put("cancel_url", "android-sdk/payment-cancel.html");
+            jsonObj_.put("success_url", "https://secure.aamarpay.com/android-sdk/payment-success.html");
+            jsonObj_.put("fail_url", "https://secure.aamarpay.com/android-sdk/payment-fail.html");
+            jsonObj_.put("cancel_url", "https://secure.aamarpay.com/android-sdk/payment-cancel.html");
             jsonObj_.put("desc", this.paymentDescription);
             jsonObj_.put("type", "json");
 

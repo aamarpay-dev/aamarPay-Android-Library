@@ -5,7 +5,10 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application>
-        <activity android:name=".PgwHome"></activity>
+        <activity android:name=".PgwHome"
+                  android:exported="true">
+
+        </activity>
     </application>
 
 </manifest>
